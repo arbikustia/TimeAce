@@ -18,10 +18,10 @@ const Activity = () => {
     roomName: roomName,
   };
 
-  function detailActivity(index: number): void {
+  const detailActivity = (index: number): void => {
     navigate(`/detailactivity/${index}`);
-  }
-
+  };
+  
   // get datas from storage
   const [dataActivities, setDataActivities] = useState<activityInterface[]>();
   const storedData: string | null = localStorage.getItem("activity");
@@ -35,7 +35,7 @@ const Activity = () => {
   }, [retrievedArray, storedData]);
 
   // creat new room
-  function createRoom() {
+  const  createRoom = () => {
     if (retrievedArray && roomName) {
       // if there are datas in storage => push object into storage
       retrievedArray.push(activityDatas);
@@ -51,7 +51,7 @@ const Activity = () => {
   }
 
   // delete room
-  function deleteActivity(index: number) {
+  const deleteActivity = (index: number) => {
     dataActivities?.splice(index, 1);
     localStorage.setItem("activity", JSON.stringify(dataActivities));
     console.log(retrievedArray);

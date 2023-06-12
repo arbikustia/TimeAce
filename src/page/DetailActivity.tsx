@@ -8,6 +8,7 @@ import InputGroup from "../components/inputGroup";
 const DetailActivity = () => {
   const { index } = useParams();
   const desiredIndex: number = parseInt(index || "");
+  // get data from localStorage
   const [columns, setColumns] = useState<activityType[]>(() => {
     const storedData: string | null = localStorage.getItem("activity");
     if (storedData) {

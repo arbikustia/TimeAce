@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 import { BiReset } from "react-icons/bi";
 import Countdown from "react-countdown";
@@ -51,11 +51,7 @@ const Pomodoro = () => {
         {
           progres <= 8 ? setProgres((prevProgres) => prevProgres + 1) : "";
         }
-
         setIsPlaying(false);
-        console.log(progres);
-        console.log(time);
-        console.log("ok");
       }, time);
     } else {
       time = 300000;
@@ -63,10 +59,7 @@ const Pomodoro = () => {
         {
           progres <= 8 ? setProgres((prevProgres) => prevProgres + 1) : "";
         }
-        console.log(time);
         setIsPlaying(false);
-        console.log(progres);
-        console.log("ok");
       }, time);
     }
   };
