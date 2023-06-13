@@ -55,7 +55,7 @@ const InputGroup: React.FC<InputGroupProps> = ({ onAddColumn }) => {
         onClick={handleAddColumn}
         className="btn w-full bg-blue-500 text-white rounded p-2"
         >
-        Add Column
+        Add
       </button>
         </div>
     </div>
