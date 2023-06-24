@@ -68,18 +68,18 @@ const Pomodoro = () => {
   return (
     <>
       <Navbar />
-      <div className="w-full pt-44 text-white flex flex-col justify-center items-center gap-10">
-        <ul className="steps steps-vertical lg:steps-horizontal absolute lg:static left-5 top-20">
+      <div className="w-full pt-16 text-white flex flex-col justify-center items-center gap-10 bg-white min-h-screen">
+        <ul className="steps steps-vertical lg:steps-horizontal absolute lg:static left-5 top-20 ">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((step) => (
             <li
               key={step}
-              className={`step ${progres >= step ? "step-primary" : ""}`}
+              className={`step ${progres >= step ? "step-primary" : ""} text-white font-bold`}
             ></li>
           ))}
         </ul>
         <div className="w-full flex justify-center items-center flex-col h-full text-3xl ">
           {!isPlaying && (
-            <div className="flex flex-col items-center gap-5">
+            <div className="flex flex-col items-center gap-5 text-black">
               <p className="text-7xl">
                 {progres % 2 != 0 && progres != 7
                   ? "0" + 5
@@ -90,7 +90,7 @@ const Pomodoro = () => {
               </p>
               {progres <= 0 ? (
                 <button
-                  className="btn text-2xl text-white"
+                  className="btn text-2xl text-white bg-blue-500 hover:bg-blue-500 border-none"
                   onClick={handleNext}
                 >
                   <BsFillPlayFill />
@@ -110,7 +110,7 @@ const Pomodoro = () => {
             </div>
           )}
           {isPlaying && (
-            <div className="flex justify-center items-center flex-col text-7xl gap-5 ">
+            <div className="flex justify-center items-center flex-col text-7xl gap-5 text-black font-semibold ">
               <Countdown date={targetDate} renderer={renderer} />
               <button className="text-white btn text-2xl" onClick={handlePause}>
                 <BiReset />

@@ -1,13 +1,49 @@
 import { useNavigate } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { useCookies } from "react-cookie";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
   function goToPage(page: string): void {
     navigate(`${page}`);
   }
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Yes",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "No",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        removeCookie("user");
+        navigate("/");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'white',
+          customClass: {
+            popup: 'colored-toast'
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true
+        })
+        await Toast.fire({
+          icon: 'success',
+          title: "Logout successfully"
+        })
+      }
+    });
+  };
   return (
-    <div className="navbar bg-base-100 shadow-md text-white fixed z-50 ">
+    <div className="navbar bg-blue-500 shadow-md text-white fixed z-50 ">
       <div className="navbar-start z-40">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -28,10 +64,10 @@ const Navbar = () => {
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 backdrop-blur-xl bg-white/30"
+            className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-white rounded-box w-52 text-black"
           >
             <li>
-              <a onClick={() => goToPage("/activity")}>My activity</a>
+              <a onClick={() => goToPage("/activity")}>Eisenhower</a>
             </li>
             <li>
               <a onClick={() => goToPage("/pomodoro")}>Pomodoro</a>
@@ -46,7 +82,7 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a onClick={() => goToPage("/activity ")}>My activity</a>
+            <a onClick={() => goToPage("/activity ")}>Eisenhower</a>
           </li>
           <li>
             <a onClick={() => goToPage("/pomodoro")}>Pomodoro</a>
@@ -57,9 +93,24 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <a className="btn backdrop-blur-xl bg-white/30 border-none ">Login</a>
+        {/* <a className="text-2xl cursor-pointer mr-5"></a> */}
+        <div className="dropdown dropdown-end flex">
+          <label tabIndex={0} className="text-2xl cursor-pointer mr-5">
+            <FaUser />
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-32 flex gap-2"
+          >
+            <li className="bg-blue-500 rounded-lg ">
+              <a>Profile</a>
+            </li>
+            <li className="bg-blue-500 rounded-lg">
+              <a onClick={handleLogout}>Log out</a>
+            </li>
+          </ul>
+        </div>
       </div>
-      
     </div>
   );
 };

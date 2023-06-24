@@ -1,6 +1,7 @@
 export type activityType = {
-  activityName: string;
+  nameActivity: string;
   condition1: string;
   condition2: string;
   act?: string;
+  _id?:string
 };

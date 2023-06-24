@@ -2,89 +2,177 @@ import { useEffect, useState } from "react";
 import { activityInterface } from "../utils/interface/ActivityInterface";
 import { useParams } from "react-router-dom";
 import { activityType } from "../utils/type/ActyvityType";
-import InputGroup from "../components/inputGroup";
+import InputGroup from "../components/InputGroup";
 import Navbar from "../components/Navbar";
+import axios from "axios";
+import { useCookies } from "react-cookie";
+import Swal from "sweetalert2";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 const DetailActivity = () => {
-  const { index } = useParams();
-  const desiredIndex: number = parseInt(index || "");
-  // get data from localStorage
-  const [columns, setColumns] = useState<activityType[]>(() => {
-    const storedData: string | null = localStorage.getItem("activity");
-    if (storedData) {
-      const retrievedArray: activityInterface[] = JSON.parse(storedData);
-      const initialColumns = retrievedArray[desiredIndex]?.activity || [];
-      if (initialColumns.length > 0) {
-        return initialColumns;
-      }
+  const { id } = useParams();
+  const [cookies] = useCookies(["user"]);
+  const token = cookies.user.token;
+  const baseUrl = "http://localhost:3000/activity";
+  const [dataActivity, setDataActivity] = useState([]);
+  let act: string;
+
+  const getActivity = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/getactivity/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("success get activity");
+      setDataActivity(response.data);
+    } catch (error) {
+      console.log(error);
     }
-    return [];
-  });
+  };
 
   useEffect(() => {
-    const storedData: string | null = localStorage.getItem("activity");
-    let retrievedArray: activityInterface[] = [];
-    if (storedData) {
-      retrievedArray = JSON.parse(storedData);
-      retrievedArray[desiredIndex] = {
-        ...retrievedArray[desiredIndex],
-        activity: columns,
-      };
-      localStorage.setItem("activity", JSON.stringify(retrievedArray));
-    }
-  }, [columns, desiredIndex]);
+    getActivity();
+  }, []);
 
-  const handleAddColumn = (data: activityType) => {
-    let datas: activityType = {
-      activityName: "",
-      condition1: "",
-      condition2: "",
-    };
-    datas = data;
+  // create new activity
+  const handleAddActivity = async (data: activityType) => {
     if (data.condition1 == "importan" && data.condition2 == "urgen") {
-      datas = { ...datas, act: "do it now" };
+      act = "do it now";
     } else if (
       data.condition1 == "importan" &&
       data.condition2 == "not urgen"
     ) {
-      datas = { ...datas, act: "Schedule a time to do it" };
+      act = "Schedule a time to do it";
     } else if (
       data.condition1 == "not importan" &&
       data.condition2 == "urgen"
     ) {
-      datas = { ...datas, act: "delegate" };
+      act = "delegate";
     } else if (
       data.condition1 == "not importan" &&
       data.condition2 == "not urgen"
     ) {
-      datas = { ...datas, act: "Delete it" };
+      act = "Delete it";
     }
-    setColumns([...columns, datas]);
+    try {
+      const response = await axios.post(
+        `${baseUrl}/addactivity/${id}`,
+        {
+          nameActivity: data.nameActivity,
+          condition1: data.condition1,
+          condition2: data.condition2,
+          act: act,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(act);
+      getActivity();
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-right",
+        iconColor: "white",
+        customClass: {
+          popup: "colored-toast",
+        },
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      });
+      await Toast.fire({
+        icon: "success",
+        title: "Success",
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  const deleteActivity = async (index: number) => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await axios.delete(
+            `${baseUrl}/deleteactivity/${id}/${index}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(response.data);
+          getActivity();
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-right",
+            iconColor: "white",
+            customClass: {
+              popup: "colored-toast",
+            },
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          });
+          await Toast.fire({
+            icon: "success",
+            title: "Your file has been deleted.",
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error, index);
+    }
+  };
   return (
     <>
       <Navbar />
-      <div className="pt-16 overflow-x-auto">
-        <table className="table text-white table-zebra">
+      <div className="pt-16 overflow-x-auto bg-white min-h-screen">
+        <table className="table text-white">
           <thead className="text-white ">
-            <tr>
+            <tr className="border-none text-black text-lg font-bold">
               <th></th>
               <th>Activity</th>
               <th>Condition</th>
-              <th>act</th>
+              <th>Act</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
-            {columns?.map((item: activityType, index: number) => {
+            {dataActivity?.map((item: activityType, index: number) => {
+              console.log(dataActivity);
               return (
-                <tr key={index}>
+                <tr
+                  key={index}
+                  className={`text-black border-none font-semibold ${
+                    index % 2 == 0 ? "bg-gray-200" : "bg-white"
+                  }`}
+                >
                   <th>{index + 1}</th>
-                  <td>{item.activityName}</td>
+                  <td>{item.nameActivity}</td>
                   <td>
                     {item.condition1} - {item.condition2}
                   </td>
                   <td>{item.act}</td>
+                  <td
+                    className="text-red-500 text-xl"
+                    onClick={() => deleteActivity(index)}
+                  >
+                    <button className="btn bg-gray-200 hover:bg-gray-200 border-none cursor-pointer text-red-500">
+                      <AiTwotoneDelete />
+                    </button>
+                  </td>
                 </tr>
               );
             })}
@@ -93,10 +181,10 @@ const DetailActivity = () => {
         <input type="checkbox" id="my_modal_7" className="modal-toggle" />
         {/* modal */}
         <div className="modal ">
-          <div className="modal-box flex flex-col gap-5 ">
+          <div className="modal-box flex flex-col gap-5 bg-white">
             <div>
               {/* Render InputGroup component */}
-              <InputGroup onAddColumn={handleAddColumn} />
+              <InputGroup onAddColumn={handleAddActivity} />
             </div>
           </div>
           <label className="modal-backdrop" htmlFor="my_modal_7">
@@ -106,7 +194,7 @@ const DetailActivity = () => {
 
         <label
           htmlFor="my_modal_7"
-          className="btn absolute right-5 bottom-5 border-none text-black hover:backdrop-blur-xl hover:bg-white/30 backdrop-blur-xl bg-white/30"
+          className="btn fixed right-5 bottom-5 border-none text-white font-bold bg-blue-500 hover:bg-blue-500"
         >
           New Activity
         </label>

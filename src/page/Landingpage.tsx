@@ -1,93 +1,96 @@
 import { useNavigate } from "react-router-dom";
-import bg1 from "../assets/bg1.png";
 import HeroRight from "../components/HeroRight";
 import HeroLeft from "../components/HeroLeft";
+import logo from "../assets/logo.png";
+import shape1 from "../assets/shape1.png";
+import shape2 from "../assets/shape2.png";
+import shape3 from "../assets/shape3.png";
+import pomodoro from "../assets/pomodoro.png";
+import eisenhower from "../assets/eisenhower.png";
+import { useCookies } from "react-cookie";
+import { useEffect } from "react";
 
 const Landingpage = () => {
+  const [cookies] = useCookies(["user"]);
   const navigate = useNavigate();
-  const login = () => {
-    navigate("/login");
-  };
+
+  useEffect(() => {
+    if(cookies.user){
+      navigate("/activity")
+    }
+  },[])
+
   return (
-    <div className="bg-red-500">
-      <div className="navbar bg-base-100 fixed z-50">
-        <div className="flex-1">
-          <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+    <div className="bg-white">
+      <div className="navbar bg-white fixed z-50 ">
+        <div className="flex-1 gap-2 cursor-pointer">
+          <img src={logo} alt="" className="w-5 ml-2" />
+          <a className="font-extrabold text-xl text-blue-500 ">TimeAce</a>
         </div>
-        <div className="flex-none">
-          <button className="btn btn-square btn-ghost" onClick={login}>
-            Login
+        <div className="flex-none flex flex-row gap-10">
+          <button className=" text-black" onClick={() => navigate("/faq")}>FAQ</button>
+          <button className=" text-black" onClick={() => navigate("/register")}>
+            Sign-up
+          </button>
+          <button className="text-black mr-3" onClick={() => navigate("/login")}>
+            Sign-in
           </button>
         </div>
       </div>
+
+      <div className="w-full h-screen flex flex-col justify-center items-center">
+        <img src={shape1} className="w-1/4 absolute left-0 top-16" alt="" />
+        <h1 className="text-5xl font-extrabold text-blue-500 z-10 absolute top-20 ">TimeAce</h1>
+        <p className="text-black text-center z-10 absolute top-32 font-bold ">
+          Your <span className="text-blue-500 font-bold">Time</span> Navigator -
+          Optimize, Organize, and Embrace Success!
+        </p>
+        <img src={shape3} className="px-5 md:w-1/3 mt-10 z-10 absolute bottom-0" alt="" />
+        <img src={shape2} className=" md:w-1/5  absolute right-0 top-16" alt="" />
+      </div>
       <HeroRight
-        title="TimeAce"
-        text="ipsum dolor sit ament loremipsum dolor sit ament ipsum dolor sit ament loremipsum dolor sit ament"
-        img={bg1}
-      />
-      <HeroLeft
         title="Eisenhower"
-        text="ipsum dolor sit ament loremipsum dolor sit ament ipsum dolor sit ament loremipsum dolor sit ament"
-        img={bg1}
+        text="The system intelligently ranks activities according to their importance and urgency, helping you make informed decisions about which tasks to tackle first."
+        img={eisenhower}
+      />
+
+      <HeroLeft
+        title="Pomodoro"
+        text=" Keep track of your work sessions using 
+        the Pomodoro feature, allowing you to 
+        analyze your productivity patterns and 
+        make improvements."
+        img={pomodoro}
       />
       <HeroRight
-        title="Pomodoro"
-        text="ipsum dolor sit ament loremipsum dolor sit ament ipsum dolor sit ament loremipsum dolor sit ament"
-        img={bg1}
-      />
-      <HeroLeft
         title="Todo List"
-        text="ipsum dolor sit ament loremipsum dolor sit ament ipsum dolor sit ament loremipsum dolor sit ament"
-        img={bg1}
+        text="Keep your tasks organized and easily 
+        accessible with the to-do list feature, 
+        ensuring nothing gets overlooked or forgotten."
+        img={eisenhower}
       />
 
       {/* footer */}
-      <footer className="footer footer-center p-10 bg-base-200 text-base-content rounded">
+      <footer className="footer footer-center p-10 text-base-content rounded bg-blue-500">
+        <p className="text-2xl text-white font-semibold">
+          Use your time properly with TimeAce
+        </p>
+        <div className="flex flex-row">
+          <button className="btn bg-blue-800 text-white font-bold hover:bg-blue-600 border-none">
+            Register
+          </button>
+          <button className="btn bg-blue-800 text-white font-bold hover:bg-blue-600 border-none">
+            Login
+          </button>
+        </div>
         <div className="grid grid-flow-col gap-4">
-          <a className="link link-hover">About us</a>
-          <a className="link link-hover">Contact</a>
-          <a className="link link-hover">Jobs</a>
-          <a className="link link-hover">Press kit</a>
+          <a className="link link-hover text-white">arbikustia14@gmail.com</a>
         </div>
+
         <div>
-          <div className="grid grid-flow-col gap-4">
-            <a>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                className="fill-current"
-              >
-                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-              </svg>
-            </a>
-            <a>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                className="fill-current"
-              >
-                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-              </svg>
-            </a>
-            <a>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                className="fill-current"
-              >
-                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-              </svg>
-            </a>
-          </div>
-        </div>
-        <div>
-          <p>Copyright © 2023 - All right reserved by ACME Industries Ltd</p>
+          <p className="text-white">
+            Copyright © 2023 - All right reserved by TimeAce
+          </p>
         </div>
       </footer>
     </div>

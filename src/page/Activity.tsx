@@ -4,95 +4,165 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import { TbListDetails } from "react-icons/tb";
 import { activityInterface } from "../utils/interface/ActivityInterface";
 import Navbar from "../components/Navbar";
+import { useCookies } from "react-cookie";
+import axios from "axios";
+import Swal from "sweetalert2";
+
 
 const Activity = () => {
   const navigate = useNavigate();
   const [roomName, setRoomName] = useState("");
+  const [cookies] = useCookies(["user"]);
+  const token = cookies.user.token;
+  const [dataRoom, setDataRoom] = useState([]);
+  const baseUrl = "https://timeace.fly.dev";
 
+  // get all room
+  const getRoom = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/activity`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDataRoom(response.data);
+      console.log(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getRoom();
+  }, []);
+
+  // post data room
+  const createRoom = async () => {
+    try {
+      const response = await axios.post(
+        `${baseUrl}/activity`,
+        {
+          roomName: roomName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      getRoom();
+      setRoomName("");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-right',
+        iconColor: 'white',
+        customClass: {
+          popup: 'colored-toast'
+        },
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true
+      })
+      await Toast.fire({
+        icon: 'success',
+        title: 'Success'
+      })
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // delete room
+  const deleteRoom = async (id: string) => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await axios.delete(`${baseUrl}/activity/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log(response.data);
+          getRoom();
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-right',
+            iconColor: 'white',
+            customClass: {
+              popup: 'colored-toast'
+            },
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true
+          })
+          await Toast.fire({
+            icon: 'success',
+            title: "Your file has been deleted."
+          })
+        
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // push room name from input to roomName
   const getRoomName = (roomname: string) => {
     setRoomName(roomname);
   };
 
-  // create variable to store or push datas from storage
-  const activity: activityInterface[] = [];
-  const activityDatas: activityInterface = {
-    roomName: roomName,
-  };
-
-  const detailActivity = (index: number): void => {
-    navigate(`/detailactivity/${index}`);
-  };
-
-  // get datas from storage
-  const [dataActivities, setDataActivities] = useState<activityInterface[]>();
-  const storedData: string | null = localStorage.getItem("activity");
-  let retrievedArray: activityInterface[] = [];
-
-  if (storedData) {
-    retrievedArray = JSON.parse(storedData);
-  }
-  useEffect(() => {
-    setDataActivities(retrievedArray);
-  }, [retrievedArray, storedData]);
-
-  // creat new room
-  const createRoom = () => {
-    if (retrievedArray && roomName) {
-      // if there are datas in storage => push object into storage
-      retrievedArray.push(activityDatas);
-      localStorage.setItem("activity", JSON.stringify(retrievedArray));
-      setDataActivities(retrievedArray);
-    } else if (roomName) {
-      // if there are not datas in storage => create new array to cover datas object
-      activity.push(activityDatas);
-      localStorage.setItem("activity", JSON.stringify(activity));
-      setDataActivities(retrievedArray);
-    }
-    setRoomName("");
-  };
-
-  // delete room
-  const deleteActivity = (index: number) => {
-    dataActivities?.splice(index, 1);
-    localStorage.setItem("activity", JSON.stringify(dataActivities));
-    console.log(retrievedArray);
-    setDataActivities(retrievedArray);
+  // go to detail
+  const detailActivity = (id: string) => {
+    navigate(`/detailactivity/${id}`);
   };
 
   return (
     <>
-        <Navbar />
-      <div className="pt-16">
+      <Navbar />
+      <div className="pt-16 bg-white min-h-screen">
         <div className="overflow-x-auto">
-          <table className="table table-zebra">
+          <table className="table mt-5">
             {/* head */}
-            <thead className="text-white">
-              <tr>
+            <thead className="text-black text-lg">
+              <tr className="border-none">
                 <th></th>
                 <th>Name</th>
                 <th>Detail</th>
                 <th>Delete</th>
               </tr>
             </thead>
-            <tbody className="text-white">
-              {dataActivities?.map((item: activityInterface, index: number) => {
+            <tbody className="text-black ">
+              {dataRoom?.map((item: activityInterface, index: number) => {
+                console.log(dataRoom);
                 return (
-                  <tr key={index} className="">
+                  <tr key={index} className="border-none">
                     <th>{index + 1}</th>
-                    <td>{item.roomName}</td>
+                    <td className="font-bold">{item.roomName}</td>
                     <td>
                       <button
-                        onClick={() => detailActivity(index)}
-                        className="btn cursor-pointer text-purple-500 "
+                        onClick={() => detailActivity(item._id)}
+                        className="btn bg-gray-200 hover:bg-gray-200 border-none cursor-pointer text-purple-500 "
                       >
                         <TbListDetails />
                       </button>
                     </td>
                     <td
                       className="text-red-500 text-xl"
-                      onClick={() => deleteActivity(index)}
+                      onClick={() => deleteRoom(item._id)}
                     >
-                      <button className="btn cursor-pointer text-red-500">
+                      <button className="btn bg-gray-200 hover:bg-gray-200 border-none cursor-pointer text-red-500">
                         <AiTwotoneDelete />
                       </button>
                     </td>
@@ -104,13 +174,14 @@ const Activity = () => {
         </div>
         <input type="checkbox" id="my_modal_7" className="modal-toggle" />
         <div className="modal ">
-          <div className="modal-box flex flex-col gap-5 ">
-            <p className="text-center">New Activity</p>
-            <form className="flex flex-row flex-wrap gap-3  ">
+          <div className="modal-box flex flex-col gap-5 bg-white">
+            <p className="text-center text-black font-bold">NEW ROOM</p>
+            <form className="flex flex-row flex-wrap gap-3  text-black">
               <input
-                className="input input-bordered input-md w-full text-white bg-base-300 "
+                className="input input-bordered input-md w-full bg-gray-200 text-black font-semibold"
                 placeholder="name"
                 type="text"
+                id="room"
                 value={roomName}
                 onChange={(e) => getRoomName(e.target.value)}
               />
@@ -118,7 +189,7 @@ const Activity = () => {
             <label
               htmlFor="my_modal_7"
               onClick={() => createRoom()}
-              className="btn"
+              className="btn bg-blue-500 hover:bg-blue-500 text-white font-extrabold border-none"
             >
               create
             </label>
@@ -129,9 +200,9 @@ const Activity = () => {
         </div>
         <label
           htmlFor="my_modal_7"
-          className="btn absolute right-5 bottom-5 border-none text-black hover:backdrop-blur-xl hover:bg-white/30 backdrop-blur-xl bg-white/30"
+          className="btn fixed right-5 bottom-5 border-none text-white bg-blue-500 hover:bg-blue-500 font-bold"
         >
-          New Activity
+          New Room
         </label>
       </div>
     </>

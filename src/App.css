@@ -1,4 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 *{
     padding: 0;
     margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
+
+.colored-toast.swal2-icon-success {
+    background-color: #a5dc86 !important;
+  }
+
+  .colored-toast.swal2-icon-error {
+    background-color: #f27474 !important;
+    color: white;
+  }
