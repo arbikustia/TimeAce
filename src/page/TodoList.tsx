@@ -15,7 +15,7 @@ const TodoList = () => {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [label, setLabel] = useState("");
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = "https://timeace.fly.dev";
   const [cookies, setCookie] = useCookies(["user"]);
   const token = cookies.user.token;
 

@@ -15,7 +15,7 @@ const Activity = () => {
   const [cookies] = useCookies(["user"]);
   const token = cookies.user.token;
   const [dataRoom, setDataRoom] = useState([]);
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = "https://timeace.fly.dev";
 
   // get all room
   const getRoom = async () => {

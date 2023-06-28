@@ -17,7 +17,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState("");
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = "https://timeace.fly.dev";
 
   const navigate = useNavigate();
 

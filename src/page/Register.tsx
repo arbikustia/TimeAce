@@ -44,7 +44,7 @@ export default function Register() {
 
     try {
       if (isValid) {
-        const res = await axios.post("http://localhost:3000/users/register", {
+        const res = await axios.post("https://timeace.fly.dev/users/register", {
           fullname: fullName,
           email: email,
           password: password,

@@ -14,7 +14,7 @@ const DetailActivity = () => {
   const { id } = useParams();
   const [cookies] = useCookies(["user"]);
   const token = cookies.user.token;
-  const baseUrl = "http://localhost:3000/activity";
+  const baseUrl = "https://timeace.fly.dev/activity";
   const [dataActivity, setDataActivity] = useState([]);
 
   useEffect(() => {
