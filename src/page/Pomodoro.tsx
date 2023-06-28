@@ -1,13 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 import { BiReset } from "react-icons/bi";
 import Countdown from "react-countdown";
 import Navbar from "../components/Navbar";
+import alarm from "../assets/alarm.mp3";
+import { useDispatch } from "react-redux";
+import { checkTime } from "../Store/Features/CheckTimerSlice";
 
 const Pomodoro = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progres, setProgres] = useState(0);
+  const [isAlarm, setIsAlarm] = useState(false);
   let time: number;
+  let isDone = false;
+  let audio: HTMLAudioElement;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAlarm) {
+      audio = new Audio(alarm);
+      audio.play();
+    } else if (audio) {
+      audio.pause();
+    }
+  }, [isAlarm]);
 
   const targetDate = new Date();
   if (progres % 2 != 0 && progres != 7) {
@@ -20,8 +36,10 @@ const Pomodoro = () => {
 
   const handlePause = () => {
     setIsPlaying(false);
+    isDone = true;
     setProgres(0);
     time = 0;
+    dispatch(checkTime(isDone));
   };
 
   const renderer = ({
@@ -43,24 +61,38 @@ const Pomodoro = () => {
   };
 
   const handleNext = () => {
-    setIsPlaying(true);
     if (progres % 2 === 0) {
+      setIsPlaying(true);
+      dispatch(checkTime(isDone));
+      setIsAlarm(false);
+      isDone = false;
       {
-        progres == 7 ? (time = 900000) : (time = 1500000);
+        progres == 7 ? (time = 900000) : (time = 3000);
       }
+
       setTimeout(function () {
         {
           progres <= 8 ? setProgres((prevProgres) => prevProgres + 1) : "";
         }
+        setIsAlarm(true);
         setIsPlaying(false);
+        isDone = true;
+        dispatch(checkTime(isDone));
       }, time);
     } else {
-      time = 300000;
+      time = 3000;
+      isDone = false;
+      dispatch(checkTime(isDone));
+      setIsAlarm(false);
+      setIsPlaying(true);
       setTimeout(function () {
         {
           progres <= 8 ? setProgres((prevProgres) => prevProgres + 1) : "";
         }
+        setIsAlarm(true);
         setIsPlaying(false);
+        isDone = true;
+        dispatch(checkTime(isDone));
       }, time);
     }
   };
@@ -73,7 +105,9 @@ const Pomodoro = () => {
           {[1, 2, 3, 4, 5, 6, 7, 8].map((step) => (
             <li
               key={step}
-              className={`step ${progres >= step ? "step-primary" : ""} text-white font-bold`}
+              className={`step ${
+                progres >= step ? "step-primary" : ""
+              } text-white font-bold`}
             ></li>
           ))}
         </ul>

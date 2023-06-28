@@ -7,8 +7,27 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
-  function goToPage(page: string): void {
-    navigate(`${page}`);
+  async function goToPage(page: string): Promise<void> {
+    const pathname = window.location.pathname;
+    if (pathname === "/pomodoro" && page !== "/pomodoro") {
+      await Swal.fire({
+        title: "If you exit this page, all your progress will be lost.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Yes",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "No",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          navigate(page);
+        } else {
+          navigate("/pomodoro");
+        }
+      });
+    } else {
+      navigate(page);
+    }
   }
 
   const handleLogout = () => {
@@ -26,24 +45,25 @@ const Navbar = () => {
         navigate("/");
         const Toast = Swal.mixin({
           toast: true,
-          position: 'top-right',
-          iconColor: 'white',
+          position: "top-right",
+          iconColor: "white",
           customClass: {
-            popup: 'colored-toast'
+            popup: "colored-toast",
           },
           showConfirmButton: false,
           timer: 1500,
-          timerProgressBar: true
-        })
+          timerProgressBar: true,
+        });
         await Toast.fire({
-          icon: 'success',
-          title: "Logout successfully"
-        })
+          icon: "success",
+          title: "Logout successful",
+        });
       }
     });
   };
+
   return (
-    <div className="navbar bg-blue-500 shadow-md text-white fixed z-50 ">
+    <div className="navbar bg-blue-500 shadow-md text-white fixed z-50">
       <div className="navbar-start z-40">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -82,7 +102,7 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a onClick={() => goToPage("/activity ")}>Eisenhower</a>
+            <a onClick={() => goToPage("/activity")}>Eisenhower</a>
           </li>
           <li>
             <a onClick={() => goToPage("/pomodoro")}>Pomodoro</a>
@@ -93,7 +113,6 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        {/* <a className="text-2xl cursor-pointer mr-5"></a> */}
         <div className="dropdown dropdown-end flex">
           <label tabIndex={0} className="text-2xl cursor-pointer mr-5">
             <FaUser />
@@ -102,9 +121,6 @@ const Navbar = () => {
             tabIndex={0}
             className="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-32 flex gap-2"
           >
-            <li className="bg-blue-500 rounded-lg ">
-              <a>Profile</a>
-            </li>
             <li className="bg-blue-500 rounded-lg">
               <a onClick={handleLogout}>Log out</a>
             </li>

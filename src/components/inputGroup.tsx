@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { activityType } from "../utils/type/ActyvityType";
 
 type InputGroupProps = {
@@ -25,7 +25,7 @@ const InputGroup: React.FC<InputGroupProps> = ({ onAddColumn }) => {
   };
 
   return (
-    <div className="flex  gap-4">
+    <div className="flex gap-4">
       <div className="flex flex-row flex-wrap gap-5 bg-white">
         <input
           type="text"
@@ -36,10 +36,9 @@ const InputGroup: React.FC<InputGroupProps> = ({ onAddColumn }) => {
           required
         />
         <select
-          value={condition1 ? condition1 : "importan"}
+          value={condition1}
           onChange={(e) => setCondition1(e.target.value)}
           className="select select-primary bg-white text-black border-2"
-          
         >
           <option value="importan">importan</option>
           <option value="not importan">not importan</option>
@@ -48,12 +47,10 @@ const InputGroup: React.FC<InputGroupProps> = ({ onAddColumn }) => {
         <select
           value={condition2}
           onChange={(e) => setCondition2(e.target.value)}
-          className="select select-primary bg-white text-black border-2 "
+          className="select select-primary bg-white text-black border-2"
         >
-          <option className="" value="urgen">
-            urgen
-          </option>
-          <option value="not urgen">not urger</option>
+          <option value="urgen">urgen</option>
+          <option value="not urgen">not urgen</option>
           {/* Place your options here */}
         </select>
         <button

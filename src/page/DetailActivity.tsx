@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { activityInterface } from "../utils/interface/ActivityInterface";
 import { useParams } from "react-router-dom";
-import { activityType } from "../utils/type/ActyvityType";
-import InputGroup from "../components/InputGroup";
-import Navbar from "../components/Navbar";
-import axios from "axios";
 import { useCookies } from "react-cookie";
 import Swal from "sweetalert2";
 import { AiTwotoneDelete } from "react-icons/ai";
+import axios from "axios";
+
+import { activityInterface } from "../utils/interface/ActivityInterface";
+import { activityType } from "../utils/type/ActyvityType";
+import InputGroup from "../components/InputGroup";
+import Navbar from "../components/Navbar";
 
 const DetailActivity = () => {
   const { id } = useParams();
@@ -15,7 +16,10 @@ const DetailActivity = () => {
   const token = cookies.user.token;
   const baseUrl = "http://localhost:3000/activity";
   const [dataActivity, setDataActivity] = useState([]);
-  let act: string;
+
+  useEffect(() => {
+    getActivity();
+  }, []);
 
   const getActivity = async () => {
     try {
@@ -24,39 +28,35 @@ const DetailActivity = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("success get activity");
       setDataActivity(response.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    getActivity();
-  }, []);
-
-  // create new activity
   const handleAddActivity = async (data: activityType) => {
-    if (data.condition1 == "importan" && data.condition2 == "urgen") {
+    let act = "";
+    if (data.condition1 === "importan" && data.condition2 === "urgen") {
       act = "do it now";
     } else if (
-      data.condition1 == "importan" &&
-      data.condition2 == "not urgen"
+      data.condition1 === "importan" &&
+      data.condition2 === "not urgen"
     ) {
       act = "Schedule a time to do it";
     } else if (
-      data.condition1 == "not importan" &&
-      data.condition2 == "urgen"
+      data.condition1 === "not importan" &&
+      data.condition2 === "urgen"
     ) {
       act = "delegate";
     } else if (
-      data.condition1 == "not importan" &&
-      data.condition2 == "not urgen"
+      data.condition1 === "not importan" &&
+      data.condition2 === "not urgen"
     ) {
       act = "Delete it";
     }
+
     try {
-      const response = await axios.post(
+      await axios.post(
         `${baseUrl}/addactivity/${id}`,
         {
           nameActivity: data.nameActivity,
@@ -70,9 +70,10 @@ const DetailActivity = () => {
           },
         }
       );
-      console.log(act);
+
       getActivity();
-      const Toast = Swal.mixin({
+
+      Swal.fire({
         toast: true,
         position: "top-right",
         iconColor: "white",
@@ -82,8 +83,6 @@ const DetailActivity = () => {
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
-      });
-      await Toast.fire({
         icon: "success",
         title: "Success",
       });
@@ -94,7 +93,7 @@ const DetailActivity = () => {
 
   const deleteActivity = async (index: number) => {
     try {
-      Swal.fire({
+      const result = await Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
         icon: "warning",
@@ -102,39 +101,39 @@ const DetailActivity = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          const response = await axios.delete(
-            `${baseUrl}/deleteactivity/${id}/${index}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          console.log(response.data);
-          getActivity();
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-right",
-            iconColor: "white",
-            customClass: {
-              popup: "colored-toast",
-            },
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-          });
-          await Toast.fire({
-            icon: "success",
-            title: "Your file has been deleted.",
-          });
-        }
       });
+
+      if (result.isConfirmed) {
+        await axios.delete(
+          `${baseUrl}/deleteactivity/${id}/${index}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        getActivity();
+
+        Swal.fire({
+          toast: true,
+          position: "top-right",
+          iconColor: "white",
+          customClass: {
+            popup: "colored-toast",
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          icon: "success",
+          title: "Your file has been deleted.",
+        });
+      }
     } catch (error) {
       console.log(error, index);
     }
   };
+
   return (
     <>
       <Navbar />
@@ -150,40 +149,35 @@ const DetailActivity = () => {
             </tr>
           </thead>
           <tbody>
-            {dataActivity?.map((item: activityType, index: number) => {
-              console.log(dataActivity);
-              return (
-                <tr
-                  key={index}
-                  className={`text-black border-none font-semibold ${
-                    index % 2 == 0 ? "bg-gray-200" : "bg-white"
-                  }`}
+            {dataActivity?.map((item: activityType, index: number) => (
+              <tr
+                key={index}
+                className={`text-black border-none font-semibold ${
+                  index % 2 === 0 ? "bg-gray-200" : "bg-white"
+                }`}
+              >
+                <th>{index + 1}</th>
+                <td>{item.nameActivity}</td>
+                <td>
+                  {item.condition1} - {item.condition2}
+                </td>
+                <td>{item.act}</td>
+                <td
+                  className="text-red-500 text-xl"
+                  onClick={() => deleteActivity(index)}
                 >
-                  <th>{index + 1}</th>
-                  <td>{item.nameActivity}</td>
-                  <td>
-                    {item.condition1} - {item.condition2}
-                  </td>
-                  <td>{item.act}</td>
-                  <td
-                    className="text-red-500 text-xl"
-                    onClick={() => deleteActivity(index)}
-                  >
-                    <button className="btn bg-gray-200 hover:bg-gray-200 border-none cursor-pointer text-red-500">
-                      <AiTwotoneDelete />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+                  <button className="btn bg-gray-200 hover:bg-gray-200 border-none cursor-pointer text-red-500">
+                    <AiTwotoneDelete />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <input type="checkbox" id="my_modal_7" className="modal-toggle" />
-        {/* modal */}
-        <div className="modal ">
+        <div className="modal">
           <div className="modal-box flex flex-col gap-5 bg-white">
             <div>
-              {/* Render InputGroup component */}
               <InputGroup onAddColumn={handleAddActivity} />
             </div>
           </div>

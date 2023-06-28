@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -7,6 +7,7 @@ import { Accordion } from "../components/Accordion";
 const FAQ = () => {
   const [cookies] = useCookies(["user"]);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (cookies.user) {
       navigate("/activity");
@@ -15,8 +16,8 @@ const FAQ = () => {
 
   return (
     <div className="bg-white min-h-screen text-black">
-      <div className="navbar bg-white fixed z-50 ">
-        <div className="flex-1 gap-2 ">
+      <div className="navbar bg-white fixed z-50">
+        <div className="flex-1 gap-2">
           <img
             src={logo}
             alt=""
@@ -31,10 +32,13 @@ const FAQ = () => {
           </a>
         </div>
         <div className="flex-none flex flex-row gap-10">
-          <button className=" text-black" onClick={() => navigate("/faq")}>
+          <button className="text-black" onClick={() => navigate("/faq")}>
             FAQ
           </button>
-          <button className=" text-black" onClick={() => navigate("/register")}>
+          <button
+            className="text-black"
+            onClick={() => navigate("/register")}
+          >
             Sign-up
           </button>
           <button
@@ -54,22 +58,44 @@ const FAQ = () => {
             title="What is the Eisenhower method in TimeAce Management?"
             text="The Eisenhower method is an approach that helps you prioritize tasks based on their urgency and importance. In TimeAce, the Eisenhower feature allows you to categorize tasks into four categories: Urgent & Important, Urgent but Not Important, Important but Not Urgent, and Not Important & Not Urgent."
           />
-          <div className="collapse collapse-arrow bg-blue-300">
+          <div className="collapse collapse-arrow bg-blue-500 text-white">
             <input type="radio" name="my-accordion-3" />
-            <div className="collapse-title text-xl font-medium">To use the Pomodoro feature in TimeAce, follow these steps</div>
+            <div className="collapse-title text-xl font-medium">
+              To use the Pomodoro feature in TimeAce, follow these steps
+            </div>
             <div className="collapse-content">
               <ul>
-                <li>1. Start the Pomodoro timer by clicking the "Start" button.</li>
-                <li>2. Focus on your work during the designated work session. Try to avoid distractions and stay concentrated on the task at hand. </li>
-                <li>3. Once the Pomodoro session ends, take a short break. This break is usually around 5 minutes.</li>
-                <li>4. After the break, begin the next Pomodoro session by clicking the "Next" button.</li>
-                <li>5. Repeat this cycle of work sessions and short breaks until you have completed a predetermined number of Pomodoros or achieved your desired productivity goal.</li>
-                <li>6. After completing a set of Pomodoros, you can take a longer break, typically around 15 minutes, to recharge and relax before starting another round.</li>
+                <li>
+                  1. Start the Pomodoro timer by clicking the "Start" button.
+                </li>
+                <li>
+                  2. Focus on your work during the designated work session. Try
+                  to avoid distractions and stay concentrated on the task at
+                  hand.
+                </li>
+                <li>
+                  3. Once the Pomodoro session ends, take a short break. This
+                  break is usually around 5 minutes.
+                </li>
+                <li>
+                  4. After the break, begin the next Pomodoro session by
+                  clicking the "Next" button.
+                </li>
+                <li>
+                  5. Repeat this cycle of work sessions and short breaks until
+                  you have completed a predetermined number of Pomodoros or
+                  achieved your desired productivity goal.
+                </li>
+                <li>
+                  6. After completing a set of Pomodoros, you can take a longer
+                  break, typically around 15 minutes, to recharge and relax
+                  before starting another round.
+                </li>
               </ul>
             </div>
           </div>
           <Accordion
-            title=" Is there a notification or alarm system in TimeAce to alert me when a Pomodoro session or break ends?"
+            title="Is there a notification or alarm system in TimeAce to alert me when a Pomodoro session or break ends?"
             text="Yes, TimeAce includes a notification or alarm system to alert you when a Pomodoro session or break is complete. You can enable notifications within the settings or preferences of the TimeAce application."
           />
           <Accordion
@@ -82,7 +108,7 @@ const FAQ = () => {
           />
           <Accordion
             title="Does TimeAce support integration with calendars or other productivity tools?"
-            text=" Currently, TimeAce does not support integration with external calendars or other productivity tools. However, you can use TimeAce as a standalone tool to manage your time and tasks."
+            text="Currently, TimeAce does not support integration with external calendars or other productivity tools. However, you can use TimeAce as a standalone tool to manage your time and tasks."
           />
           <Accordion
             title="How secure is my data and information when using TimeAce Management?"

@@ -8,7 +8,7 @@ type accordion = {
 export const Accordion:FC<accordion> = ({title, text}) => {
   return (
     <div>
-      <div className="collapse collapse-arrow bg-blue-300">
+      <div className="collapse collapse-arrow bg-blue-500 text-white">
         <input type="radio" name="my-accordion-3" />
         <div className="collapse-title text-xl font-medium">
           {title}
