@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -5,7 +6,7 @@ import { useCookies } from "react-cookie";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+  const [, , removeCookie] = useCookies(["user"]);
 
   async function goToPage(page: string): Promise<void> {
     const pathname = window.location.pathname;

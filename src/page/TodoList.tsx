@@ -16,7 +16,7 @@ const TodoList = () => {
   const [text, setText] = useState("");
   const [label, setLabel] = useState("");
   const baseUrl = "https://timeace.fly.dev";
-  const [cookies, setCookie] = useCookies(["user"]);
+  const [cookies] = useCookies(["user"]);
   const token = cookies.user.token;
 
   // get data
@@ -39,7 +39,7 @@ const TodoList = () => {
 
   const createTodo = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${baseUrl}/todolist`,
         {
           title: title,
@@ -66,7 +66,7 @@ const TodoList = () => {
   // delete todo
   const deleteTodo = async (id:string | undefined) => {
     try {
-      const response = await axios.delete(`${baseUrl}/todolist/${id}`, {
+      await axios.delete(`${baseUrl}/todolist/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

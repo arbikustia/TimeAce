@@ -38,7 +38,7 @@ const Activity = () => {
   // post data room
   const createRoom = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${baseUrl}/activity`,
         {
           roomName: roomName,
@@ -84,7 +84,7 @@ const Activity = () => {
         confirmButtonText: "Yes, delete it!",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const response = await axios.delete(`${baseUrl}/activity/${id}`, {
+          await axios.delete(`${baseUrl}/activity/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

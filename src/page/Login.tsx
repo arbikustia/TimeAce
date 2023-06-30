@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiLockOpenAlt } from "react-icons/bi";
@@ -89,7 +90,7 @@ const Login = () => {
         setPassword("");
         navigate("/activity");
       })
-      .catch((err) => {
+      .catch(() => {
         setIsLoading(false);
       });
   };

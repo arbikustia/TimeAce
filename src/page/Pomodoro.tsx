@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 import { BiReset } from "react-icons/bi";

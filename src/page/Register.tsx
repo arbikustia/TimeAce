@@ -15,7 +15,7 @@ export default function Register() {
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [cookies, setCookie] = useCookies();
+  const [cookies] = useCookies();
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
 
@@ -44,7 +44,7 @@ export default function Register() {
 
     try {
       if (isValid) {
-        const res = await axios.post("https://timeace.fly.dev/users/register", {
+        await axios.post("https://timeace.fly.dev/users/register", {
           fullname: fullName,
           email: email,
           password: password,

@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 import { AiTwotoneDelete } from "react-icons/ai";
 import axios from "axios";
 
-import { activityInterface } from "../utils/interface/ActivityInterface";
 import { activityType } from "../utils/type/ActyvityType";
 import InputGroup from "../components/InputGroup";
 import Navbar from "../components/Navbar";
